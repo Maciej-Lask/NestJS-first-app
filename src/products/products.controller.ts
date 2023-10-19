@@ -13,18 +13,31 @@ export class ProductsController {
     return this.productsService.getAll();
   }
 
+  // @Get('/:id')
+  // public getProductById(@Param('id', new ParseUUIDPipe()) id: string) {
+  //   if (!this.productsService.getProductById(id))
+  //     throw new NotFoundException('Product not found');
+  //   return this.productsService.getProductById(id);
+  // }
   @Get('/:id')
-  public getProductById(@Param('id', new ParseUUIDPipe()) id: string) {
-    if (!this.productsService.getProductById(id))
-      throw new NotFoundException('Product not found');
-    return this.productsService.getProductById(id);
+  async getById(@Param('id', new ParseUUIDPipe()) id: string) {
+    const prod = await this.productsService.getProductById(id);
+    if (!prod) throw new NotFoundException('Product not found');
+    return prod;
   }
 
+  // @Delete('/:id')
+  // public deleteProductById(@Param('id', new ParseUUIDPipe()) id: string) {
+  //   if (!this.productsService.getProductById(id))
+  //     throw new NotFoundException('Product not found');
+  //   this.productsService.deleteProductById(id);
+  //   return { success: true };
+  // }
   @Delete('/:id')
-  public deleteProductById(@Param('id', new ParseUUIDPipe()) id: string) {
-    if (!this.productsService.getProductById(id))
+  async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
+    if (!(await this.productsService.getProductById(id)))
       throw new NotFoundException('Product not found');
-    this.productsService.deleteProductById(id);
+    await this.productsService.deleteProductById(id);
     return { success: true };
   }
 
@@ -33,17 +46,26 @@ export class ProductsController {
     return this.productsService.create(productData);
   }
 
+  // @Put('/:id')
+  // updateById(
+  //   @Param('id', new ParseUUIDPipe()) id: string,
+  //   @Body() productData: UpdateProductDTO,
+  // ) {
+  //   if (!this.productsService.getProductById(id))
+  //     throw new NotFoundException('Product not found');
+
+  //   this.productsService.updateById(id, productData);
+  //   return { success: true };
+  // }
   @Put('/:id')
-  updateById(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() productData: UpdateProductDTO,
   ) {
-     if (!this.productsService.getProductById(id))
-       throw new NotFoundException('Product not found');
+    if (!(await this.productsService.getProductById(id)))
+      throw new NotFoundException('Product not found');
 
-    this.productsService.updateById(id, productData);
+    await this.productsService.updateById(id, productData);
     return { success: true };
   }
-  
-  
 }
