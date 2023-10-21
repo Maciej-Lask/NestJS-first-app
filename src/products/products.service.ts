@@ -22,6 +22,19 @@ export class ProductsService {
       where: { id },
     });
   }
+
+  public getAllExtended(): Promise<Product[]> {
+    return this.prismaService.product.findMany({
+      include: { orders: true },
+    });
+  }
+
+  public getExtendedById(id: Product['id']): Promise<Product | null> {
+    return this.prismaService.product.findUnique({
+      where: { id },
+      include: { orders: true },
+    });
+  }
   // public deleteProductById(id: Product['id']): void {
   //   db.products = db.products.filter((product) => product.id !== id);
   // }
@@ -54,12 +67,12 @@ export class ProductsService {
   // }
 
   public updateById(
-  id: Product['id'],
-  productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>,
-): Promise<Product> {
-  return this.prismaService.product.update({
-    where: { id },
-    data: productData,
-  });
-}
+    id: Product['id'],
+    productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<Product> {
+    return this.prismaService.product.update({
+      where: { id },
+      data: productData,
+    });
+  }
 }
